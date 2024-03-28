@@ -25,8 +25,6 @@ fn main() -> io::Result<()> {
             "No file path provided",
         )))?;
 
-    // force file_path, which is an option, into a string
-
     let file_path = file_path.unwrap().as_str();
 
     let path = PathBuf::from(file_path);
@@ -39,8 +37,7 @@ fn main() -> io::Result<()> {
     // Detect the encoding of the file
     let (encoding_used, _) = for_bom(&buffer);
 
-    // convert static into a matchable type, i.e. extract it's value
-
+    // encodings are statics so we need a little bit of hackery here
     let encoding_name = match encoding_used {
         enc if enc == Some(UTF_8) => "UTF-8",
         enc if enc == Some(UTF_16LE) => "UTF-16LE",
@@ -48,7 +45,6 @@ fn main() -> io::Result<()> {
         _ => "Unknown",
     };
 
-    // Print the detected encoding
     println!("Detected encoding: {}", encoding_name);
 
     Ok(())
